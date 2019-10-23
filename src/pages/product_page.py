@@ -18,6 +18,7 @@ class ProductPage(BasePage):
 
     def add_to_basket(self):
         self.browser.find_element(*ProductPageLocators.ADD_TO_BASKET_BTN).click()
+        self.solve_quiz_and_get_code()
 
     def solve_quiz_and_get_code(self):
         alert = self.browser.switch_to.alert
@@ -52,3 +53,12 @@ class ProductPage(BasePage):
                                        ProductPageLocators.BASKET_MSG[1].format(price)), \
             'Basket status message is wrong'
 
+    def should_not_be_success_message(self, name):
+        assert self.is_not_element_present(ProductPageLocators.ADD_TO_BASKET_MSG[0],
+                                           ProductPageLocators.ADD_TO_BASKET_MSG[1].format(name)),\
+            "Success message is presented, but should not be"
+
+    def message_should_disappear(self, name):
+        assert self.is_disappeared(ProductPageLocators.ADD_TO_BASKET_MSG[0],
+                                   ProductPageLocators.ADD_TO_BASKET_MSG[1].format(name)), \
+            "Success message wasn't disappear"
