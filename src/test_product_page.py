@@ -104,3 +104,30 @@ def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
     basket_page.should_be_basket_page()
     basket_page.basket_does_not_contains_items()
     basket_page.basket_should_be_empty()
+
+
+class TestUserAddToBasketFromProductPage:
+
+    def test_user_cant_see_success_message(self, browser):
+        """
+        Открываем страницу товара
+        Проверяем, что нет сообщения об успехе с помощью is_not_element_present
+        """
+        _link = 'http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=newYear2019'
+        page = ProductPage(browser, _link)
+        page.open()
+        name, price = page.get_product_info()
+        page.should_not_be_success_message(name)
+
+    def test_user_can_add_product_to_basket(self, browser, url):
+        page = ProductPage(browser, url)
+        page.open()
+        name, price = page.get_product_info()
+        page.check_product_page()
+        page.check_basket_total('£0.00')
+        page.should_not_be_success_message(name)
+        page.add_to_basket()
+        page.check_add_to_basket_message(name)
+        page.check_basket_total(price)
+        page.check_basket_notification(price)
+
